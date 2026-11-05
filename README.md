@@ -27,6 +27,7 @@ Note: This is an educational front-end simulation, not a laboratory-grade atomic
   - Responsive, dark scientific-instrument dashboard.
   - Animated backgrounds, status indicators, and optional audio controls.
 # Project Structure
+
 Quantum-Clock/
 ├── index.html          # Application layout and dashboard sections
 ├── style.css           # Styling, layout, animations, and responsive rules
@@ -34,11 +35,12 @@ Quantum-Clock/
 ├── aesthetic-bg.jpg    # Background artwork
 ├── aesthetic-bg-2.jpg  # Alternate background artwork
 └── bg.png              # Additional image asset
-Getting Started
-# Requirements
+
+# Getting Started
+Requirements
 - A modern web browser (Chrome, Firefox, Edge, or Safari).
 - Internet access for externally hosted fonts/icons and any network-based synchronization features.
-# Run locally
+ Run locally
 1. Download or extract the project.
 2. Open the Quantum-Clock folder.
 3. Open index.html in a modern browser.
