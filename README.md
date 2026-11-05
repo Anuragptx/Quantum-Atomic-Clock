@@ -36,8 +36,6 @@ Quantum-Clock/
 ├── index.html          # Application layout and dashboard sections
 ├── style.css           # Styling, layout, animations, and responsive rules
 ├── script.js           # Clock engine, simulations, charts, and interactions
-├── aesthetic-bg.jpg    # Background artwork
-├── aesthetic-bg-2.jpg  # Alternate background artwork
 └── bg.png              # Additional image asset
 
 ```
