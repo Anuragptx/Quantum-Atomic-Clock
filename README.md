@@ -31,6 +31,7 @@ Note: This is an educational front-end simulation, not a laboratory-grade atomic
     
 # Project Structure
 
+```
 Quantum-Clock/
 ├── index.html          # Application layout and dashboard sections
 ├── style.css           # Styling, layout, animations, and responsive rules
@@ -39,6 +40,7 @@ Quantum-Clock/
 ├── aesthetic-bg-2.jpg  # Alternate background artwork
 └── bg.png              # Additional image asset
 
+```
 # Getting Started
 
 Requirements
