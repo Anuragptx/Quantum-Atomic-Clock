@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Atomic Clock // Mission Control & Primary Frequency Standard</title>
+    <meta name="description" content="Ultra-realistic laboratory-grade Quantum Atomic Clock control center. Simulates Cesium-133 9.192631770 GHz hyperfine transitions, NTP Stratum 1 synchronization, Allan deviation stability analysis, and quantum resonance.">
+    
+    <!-- Scientific Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,300..800;1,300..800&family=Outfit:wght@200;300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-quantum">
+
+    <!-- Atmospheric Layers -->
+    <div class="background-overlay" id="background-overlay"></div>
+    <div class="cosmic-aurora-layer"></div>
+    <div class="grid-reticle-overlay"></div>
+    <div class="ambient-glow-orb orb-1"></div>
+    <div class="ambient-glow-orb orb-2"></div>
+    <div class="ambient-glow-orb orb-3"></div>
+
+    <div class="instrument-control-center">
+
+        <!-- ================= TOP MASTER TELEMETRY BAR ================= -->
+        <header class="master-header">
+            <div class="header-left">
+                <div class="quantum-core-badge">
+                    <i class="fa-solid fa-atom fa-spin-pulse" style="--fa-animation-duration: 8s;"></i>
+                </div>
+                <div class="facility-meta">
+                    <div class="facility-breadcrumbs">
+                        <span class="badge-org">NIST / BIPM UTC(k)</span>
+                        <span class="badge-sep">/</span>
+                        <span class="badge-sub">QUANTUM METROLOGY DIVISION</span>
+                        <span class="badge-sep">/</span>
+                        <span class="badge-model">STD-CS133-PRO</span>
+                    </div>
+                    <h1 class="main-system-title">QUANTUM ATOMIC TIME ENGINE</h1>
+                    <p class="main-system-sub">Primary Frequency Standard & Universal Time Telemetry Center</p>
+                </div>
+            </div>
+
+            <!-- Annunciator Status LED Ribbon -->
+            <div class="annunciator-ribbon">
+                <div class="annunciator-item" id="ann-atomic-lock">
+                    <span class="led-dot led-green"></span>
+                    <span class="ann-text">CS-133 LOCK</span>
+                </div>
+                <div class="annunciator-item" id="ann-ntp-status">
+                    <span class="led-dot led-cyan"></span>
+                    <span class="ann-text" id="ann-ntp-text">NTP: LOCKED</span>
+                </div>
+                <div class="annunciator-item" id="ann-vcxo-status">
+                    <span class="led-dot led-green"></span>
+                    <span class="ann-text">VCXO PLL: ON</span>
+                </div>
+                <div class="annunciator-item" id="ann-laser-status">
+                    <span class="led-dot led-green"></span>
+                    <span class="ann-text">PUMP LASER: STABLE</span>
+                </div>
+                <div class="annunciator-item" id="ann-drift-status">
+                    <span class="led-dot led-cyan"></span>
+                    <span class="ann-text" id="ann-drift-text">DRIFT: &lt;0.05 μs/d</span>
+                </div>
+            </div>
+
+            <!-- Header Quick Actions -->
+            <div class="header-action-group">
+                <button id="btn-master-run" class="hud-btn hud-btn-action" title="Halt / Resume Clock & Physics Engine">
+                    <i class="fa-solid fa-pause"></i> <span id="master-run-label">HALT CLOCK</span>
+                </button>
+                <button id="btn-aesthetic-theme" class="hud-btn hud-btn-cyan" title="Switch Aesthetic Quantum Wallpaper">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> <span id="lbl-wallpaper-name">AESTHETIC V1</span>
+                </button>
+                <button id="btn-force-sync" class="hud-btn hud-btn-cyan" title="Query Live High-Precision NTP Server">
+                    <i class="fa-solid fa-satellite-dish"></i> <span>SYNC NTP</span>
+                </button>
+                <button id="btn-export-telemetry" class="hud-btn" title="Download Full Telemetry Dataset as CSV">
+                    <i class="fa-solid fa-file-csv"></i> <span>EXPORT CSV</span>
+                </button>
+                <button id="btn-audio-mute" class="hud-btn hud-btn-icon" title="Toggle Synthesizer Microwave Audio Hum">
+                    <i class="fa-solid fa-volume-xmark" id="audio-icon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- ================= SYSTEM NAVIGATION TABS ================= -->
+        <nav class="system-nav-tabs">
+            <button class="nav-tab-btn active" data-tab="tab-clock">
+                <i class="fa-solid fa-clock"></i> <span>1. QUANTUM CLOCK</span>
+            </button>
+            <button class="nav-tab-btn" data-tab="tab-atomic-lab">
+                <i class="fa-solid fa-atom"></i> <span>2. ATOMIC LAB</span>
+            </button>
+            <button class="nav-tab-btn" data-tab="tab-freq-analyzer">
+                <i class="fa-solid fa-wave-square"></i> <span>3. FREQUENCY ANALYZER</span>
+            </button>
+            <button class="nav-tab-btn" data-tab="tab-analytics">
+                <i class="fa-solid fa-chart-line"></i> <span>4. TIME ANALYTICS</span>
+            </button>
+            <button class="nav-tab-btn" data-tab="tab-sync">
+                <i class="fa-solid fa-network-wired"></i> <span>5. SYNCHRONIZATION</span>
+            </button>
+            <button class="nav-tab-btn" data-tab="tab-diagnostics">
+                <i class="fa-solid fa-server"></i> <span>6. SYSTEM DIAGNOSTICS</span>
+            </button>
+        </nav>
+
+        <!-- ================= TAB 1: QUANTUM CLOCK (MASTER INTERFACE) ================= -->
+        <section id="tab-clock" class="tab-view-content active">
+            <!-- Global Config Sub-bar -->
+            <div class="clock-config-bar">
+                <div class="config-cell">
+                    <span class="cfg-lbl"><i class="fa-solid fa-globe"></i> TIME STANDARD:</span>
+                    <select id="sel-time-standard" class="hud-select">
+                        <option value="LOCAL" selected>Local Host Time</option>
+                        <option value="UTC">UTC (Coordinated Universal Time)</option>
+                        <option value="TAI">TAI (International Atomic Time, UTC+37s)</option>
+                        <option value="GPS">GPS Time (UTC+18s)</option>
+                        <option value="SIDEREAL">Local Sidereal Time (LST)</option>
+                        <option value="America/New_York">New York (EST/EDT)</option>
+                        <option value="Europe/London">London (GMT/BST)</option>
+                        <option value="Europe/Paris">Paris / Berlin (CET)</option>
+                        <option value="Asia/Tokyo">Tokyo (JST)</option>
+                        <option value="Asia/Kolkata">India (IST UTC+5:30)</option>
+                    </select>
+                </div>
+
+                <div class="config-cell">
+                    <span class="cfg-lbl"><i class="fa-solid fa-sliders"></i> TIME FORMAT:</span>
+                    <div class="seg-group">
+                        <button class="seg-item active" id="btn-fmt-24">24H</button>
+                        <button class="seg-item" id="btn-fmt-12">12H</button>
+                    </div>
+                </div>
+
+                <div class="config-cell">
+                    <span class="cfg-lbl"><i class="fa-solid fa-crosshairs"></i> SUB-SECOND PRECISION:</span>
+                    <div class="seg-group">
+                        <button class="seg-item" data-prec="ms" id="btn-prec-ms">MS (.000)</button>
+                        <button class="seg-item active" data-prec="us" id="btn-prec-us">US (μs)</button>
+                        <button class="seg-item" data-prec="ns" id="btn-prec-ns">NS (ns)</button>
+                    </div>
+                </div>
+
+                <div class="config-cell">
+                    <span class="cfg-lbl"><i class="fa-solid fa-gauge-high"></i> REFRESH ENGINE:</span>
+                    <select id="sel-refresh-rate" class="hud-select">
+                        <option value="60" selected>60 FPS (Hardware Rate)</option>
+                        <option value="30">30 FPS (Power Saver)</option>
+                        <option value="120">120 FPS (High-Res Monitor)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Master Clock Hero Grid -->
+            <div class="clock-hero-grid">
+                
+                <!-- Giant Chronometer Card -->
+                <div class="hud-card hero-clock-card">
+                    <div class="card-tag-row">
+                        <span class="card-tag-main"><i class="fa-solid fa-clock-rotate-left"></i> MASTER ATOMIC DISPLAY</span>
+                        <span class="card-status-badge" id="badge-active-standard">STANDARD: UTC / SI SYNCHRONIZED</span>
+                    </div>
+
+                    <div class="main-chronometer-core">
+                        <!-- Primary Hours, Minutes, Seconds -->
+                        <div class="chronometer-num-wrap">
+                            <div id="clock-hms" class="chronometer-digits">00:00:00</div>
+                            <div id="clock-meridiem" class="chronometer-meridiem">UTC</div>
+                        </div>
+
+                        <!-- Sub-Second Fractional Units -->
+                        <div class="fractional-precision-strip" id="fractional-precision-strip">
+                            <div class="frac-box frac-ms">
+                                <span class="frac-val" id="clock-millis">.000</span>
+                                <span class="frac-unit">MILLISECONDS (10⁻³ s)</span>
+                            </div>
+                            <span class="frac-sep">/</span>
+                            <div class="frac-box frac-us" id="box-micros">
+                                <span class="frac-val" id="clock-micros">000</span>
+                                <span class="frac-unit">MICROSECONDS (10⁻⁶ s)</span>
+                            </div>
+                            <span class="frac-sep" id="sep-nanos">/</span>
+                            <div class="frac-box frac-ns" id="box-nanos">
+                                <span class="frac-val" id="clock-nanos">000</span>
+                                <span class="frac-unit">SYNTH. NANOSECONDS (10⁻⁹ s)</span>
+                            </div>
+                        </div>
+
+                        <!-- Ephemeris Meta Line -->
+                        <div class="ephemeris-meta-line">
+                            <span id="current-date" class="date-highlight">Thursday, 06 November 2026</span>
+                            <span class="dot-sep">•</span>
+                            <span>DAY OF YEAR: <strong id="val-doy" class="text-cyan">310</strong></span>
+                            <span class="dot-sep">•</span>
+                            <span>UNIX EPOCH: <strong id="val-unix-epoch" class="text-cyan">1730857200.000</strong></span>
+                            <span class="dot-sep">•</span>
+                            <span>MJD: <strong id="val-mjd" class="text-cyan">60620.0000</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Transparency Disclosure Banner -->
+                    <div class="transparency-callout">
+                        <i class="fa-solid fa-scale-balanced transparency-icon"></i>
+                        <div class="transparency-body">
+                            <strong>Scientific Measurement vs. Simulation Transparency:</strong>
+                            <p id="transparency-msg">
+                                Time base is locked to system RTC and verified against NTP Stratum 1 servers (uncertainty: ±0.15 ms). Sub-millisecond & nanosecond fractions are interpolated via high-resolution performance.now() timers phase-locked to the 9,192,631,770 Hz Cesium carrier cycle.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Circular Quantum Resonance Gauge Widget -->
+                <div class="hud-card circular-resonance-card">
+                    <div class="card-tag-row">
+                        <span class="card-tag-main"><i class="fa-solid fa-circle-notch"></i> CS-133 RESONANCE LOCK</span>
+                        <span class="card-status-badge text-green">LOCKED</span>
+                    </div>
+
+                    <div class="resonance-gauge-wrap">
+                        <canvas id="circularResonanceCanvas" width="260" height="260"></canvas>
+                        <div class="gauge-center-stats">
+                            <span class="gauge-center-sub">PHASE JITTER</span>
+                            <span id="gauge-jitter-val" class="gauge-center-num">0.08 μs</span>
+                            <span class="gauge-center-stability">STABILITY: 10⁻¹⁴</span>
+                        </div>
+                    </div>
+
+                    <div class="gauge-telemetry-footer">
+                        <div class="g-stat">
+                            <span>MICROWAVE FIELD:</span>
+                            <strong class="text-cyan" id="txt-b1-field">7.82 μT</strong>
+                        </div>
+                        <div class="g-stat">
+                            <span>TRANSITION PROB:</span>
+                            <strong class="text-green" id="txt-trans-prob">99.84%</strong>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Row: Preserved Mission Countdown + Quick Frequency Snapshot -->
+            <div class="clock-bottom-grid">
+                
+                <!-- PRESERVED MISSION COUNTDOWN TIMER (UPGRADED HUD) -->
+                <div class="hud-card countdown-preservation-card">
+                    <div class="card-tag-row">
+                        <span class="card-tag-main"><i class="fa-solid fa-hourglass-start"></i> MISSION COUNTDOWN & TARGET GOAL TIMER</span>
+                        <span class="card-status-badge">PRESERVED INSTRUMENT</span>
+                    </div>
+
+                    <div class="countdown-instrument-body">
+                        <div class="countdown-inputs-row">
+                            <div class="datetime-input-wrap">
+                                <label for="target-date" class="hud-label">TARGET TIMESTAMP:</label>
+                                <input type="datetime-local" id="target-date" class="hud-datetime-input">
+                            </div>
+                            <div class="countdown-btn-cluster">
+                                <button id="start-count" class="hud-btn hud-btn-cyan">
+                                    <i class="fa-solid fa-play"></i> <span>ARM TIMER</span>
+                                </button>
+                                <button id="btn-reset-countdown" class="hud-btn">
+                                    <i class="fa-solid fa-arrow-rotate-left"></i> <span>RESET</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 4 Time Blocks (Preserved Original IDs) -->
+                        <div id="countdown-display" class="timer-blocks-grid">
+                            <div class="time-block-hud">
+                                <span id="days" class="time-block-num">00</span>
+                                <label class="time-block-lbl">DAYS</label>
+                            </div>
+                            <div class="time-block-hud">
+                                <span id="hours" class="time-block-num">00</span>
+                                <label class="time-block-lbl">HOURS</label>
+                            </div>
+                            <div class="time-block-hud">
+                                <span id="minutes" class="time-block-num">00</span>
+                                <label class="time-block-lbl">MINUTES</label>
+                            </div>
+                            <div class="time-block-hud">
+                                <span id="seconds" class="time-block-num">00</span>
+                                <label class="time-block-lbl">SECONDS</label>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar toward target -->
+                        <div class="countdown-progress-bar-wrap" id="goal-progress-container" style="display:none;">
+                            <div class="progress-meta-text">
+                                <span id="goal-progress-title">Timeline Progress</span>
+                                <span id="goal-progress-percent">0.0%</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-fill" id="goal-progress-bar" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Synthesizer Quick Metrics -->
+                <div class="hud-card freq-quick-card">
+                    <div class="card-tag-row">
+                        <span class="card-tag-main"><i class="fa-solid fa-wave-square"></i> RF SYNTHESIZER METRICS</span>
+                        <span class="card-status-badge text-cyan">SI NOMINAL</span>
+                    </div>
+
+                    <div class="freq-metrics-list">
+                        <div class="freq-metric-row">
+                            <span class="fm-label">NOMINAL SI FREQUENCY (ν<sub>Cs</sub>):</span>
+                            <span class="fm-val text-white font-mono">9,192,631,770 Hz</span>
+                        </div>
+                        <div class="freq-metric-row">
+                            <span class="fm-label">MEASURED CARRIER FREQUENCY:</span>
+                            <span class="fm-val text-cyan font-mono" id="txt-quick-freq">9,192,631,770.000 021 Hz</span>
+                        </div>
+                        <div class="freq-metric-row">
+                            <span class="fm-label">FRACTIONAL FREQ OFFSET (y):</span>
+                            <span class="fm-val text-green font-mono" id="txt-quick-y">+2.3 × 10⁻¹⁴</span>
+                        </div>
+                        <div class="freq-metric-row">
+                            <span class="fm-label">ESTIMATED ALLAN DEVIATION:</span>
+                            <span class="fm-val text-amber font-mono" id="txt-quick-allan">1.2 × 10⁻¹⁴</span>
+                        </div>
+                        <div class="freq-metric-row">
+                            <span class="fm-label">CUMULATIVE ATOMIC CYCLES:</span>
+                            <span class="fm-val text-cyan font-mono" id="txt-quick-cycles">7.942 × 10¹⁴</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: ATOMIC LAB (INTERACTION & SIMULATION) ================= -->
+        <section id="tab-atomic-lab" class="tab-view-content">
+            <div class="lab-workspace-grid">
+                
+                <!-- Ramsey Cavity & Atomic Fountain Simulation Canvas -->
+                <div class="hud-card lab-canvas-card">
+                    <div class="card-tag-row">
+                        <span class="card-tag-main"><i class="fa-solid fa-atom"></i> RAMSEY INTERROGATION CAVITY & CESIUM FOUNTAIN</span>
+                        <div class="view-switch-btns">
+                            <button class="mode-btn active" data-labview="ramsey" id="btn-labview-ramsey">Ramsey Fringes</button>
+                            <button class="mode-btn" data-labview="fountain" id="btn-labview-fountain">Atomic Fountain</button>
+                            <button class="mode-btn" data-labview="bloch" id="btn-labview-bloch">Bloch Sphere</button>
+                        </div>
+                    </div>
+
+                    <div class="canvas-viewport-wrap">
+                        <canvas id="atomicLabCanvas" width="860" height="340"></canvas>
+                        <div class="canvas-telemetry-overlay">
+                            <span id="lab-canvas-hud-left">INTERROGATION TIME (T): 0.52 s | RAMSEY CAVITY: DUAL-PULSED</span>
+                            <span id="lab-canvas-hud-right">SERVO LOCK: PEAK DISCRIMINATED</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Quantum Physics Control Controls -->
+                <div class="hud-card lab-controls-card">
+                    <div class="card-tag-row">
+                        <span class="card-tag-main"><i class="fa-solid fa-sliders"></i> QUANTUM EXPERIMENT PARAMETERS</span>
+                        <span class="card-status-badge">INTERACTIVE LAB</span>
+                    </div>
+
+                    <div class="lab-controls-body">
+                        <!-- Parameter 1: Microwave Power -->
+                        <div class="param-slider-group">
+                            <div class="slider-header">
+                                <label for="slider-microwave-power" class="slider-lbl">MICROWAVE POWER (P<sub>RF</sub>):</label>
+                                <span class="slider-val text-cyan" id="val-mw-power">0.0 dBm (Nominal π/2 Pulse)</span>
+                            </div>
+                            <input type="range" id="slider-microwave-power" min="-6" max="6" step="0.1" value="0" class="hud-range">
+                            <p class="slider-hint">Controls Rabi oscillation pulse area ($b\tau$). Deviating from nominal reduces transition contrast.</p>
+                        </div>
+
+                        <!-- Parameter 2: Microwave Detuning -->
+                        <div class="param-slider-group">
+                            <div class="slider-header">
+                                <label for="slider-detuning" class="slider-lbl">SYNTHESIZER DETUNING (Δf):</label>
+                                <span class="slider-val text-amber" id="val-detuning">0.00 Hz (Locked)</span>
+                            </div>
+                            <input type="range" id="slider-detuning" min="-5" max="5" step="0.05" value="0" class="hud-range">
+                            <p class="slider-hint">Manually offsets VCXO frequency from the atomic transition to demonstrate Ramsey fringe slope response.</p>
+                        </div>
+
+                        <!-- Parameter 3: Atom Cloud Temperature -->
+                        <div class="param-slider-group">
+                            <div class="slider-header">
+                                <label for="slider-cloud-temp" class="slider-lbl">CESIUM CLOUD TEMP (T<sub>atom</sub>):</label>
+                                <span class="slider-val text-green" id="val-cloud-temp">1.2 μK (Laser-Cooled)</span>
+                            </div>
+                            <input type="range" id="slider-cloud-temp" min="0.2" max="10" step="0.2" value="1.2" class="hud-range">
+                            <p class="slider-hint">Doppler broadening & cloud expansion rate during ballistic transit.</p>
+                        </div>
+
+                        <!-- Parameter 4: Static C-Field Magnetic Bias -->
+                        <div class="param-slider-group">
+                            <div class="slider-header">
+                                <label for="slider-cfield" class="slider-lbl">C-FIELD MAGNETIC BIAS (B<sub>0</sub>):</label>
+                                <span class="slider-val text-cyan" id="val-cfield">100 nT (Zeeman Shift Compensated)</span>
+                            </div>
+                            <input type="range" id="slider-cfield" min="50" max="250" step="5" value="100" class="hud-range">
+                            <p class="slider-hint">Lifts magnetic sublevel degeneracy ($m_F = 0 \rightarrow m_F = 0$ clock transition).</p>
+                        </div>
+
+                        <!-- Reset Lab Parameters -->
+                        <div class="lab-actions-cluster">
+                            <button id="btn-reset-lab" class="hud-btn hud-btn-cyan" style="width: 100%;">
+                                <i class="fa-solid fa-rotate-left"></i> <span>RESTORE OPTIMAL SI CALIBRATION</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Atomic Energy Diagram Explainer Card -->
+            <div class="hud-card lab-theory-card">
+                <div class="card-tag-row">
+                    <span class="card-tag-main"><i class="fa-solid fa-graduation-cap"></i> ATOMIC TRANSITION ARCHITECTURE: ¹³³Cs HYPERFINE STRUCTURE</span>
+                </div>
+                <div class="hyperfine-diagram-grid">
+                    <div class="energy-level-box">
+                        <span class="level-badge text-cyan">UPPER HYPERFINE STATE</span>
+                        <h4 class="level-title">6²S₁/₂, F = 4, m<sub>F</sub> = 0</h4>
+                        <p class="level-desc">Total angular momentum F = I + J = 7/2 + 1/2 = 4. Ground state nuclear spin I = 7/2 aligned with valence electron spin.</p>
+                    </div>
+
+                    <div class="transition-arrow-box">
+                        <span class="freq-tag-huge text-green">ΔE = h · 9,192,631,770 Hz</span>
+                        <div class="arrow-visual">
+                            <i class="fa-solid fa-arrows-up-down text-cyan" style="font-size: 28px;"></i>
+                        </div>
+                        <span class="photon-wave">λ = 3.26 cm Microwave Photon</span>
+                    </div>
+
+                    <div class="energy-level-box">
+                        <span class="level-badge text-cyan">LOWER HYPERFINE STATE</span>
+                        <h4 class="level-title">6²S₁/₂, F = 3, m<sub>F</sub> = 0</h4>
+                        <p class="level-desc">Total angular momentum F = I - J = 7/2 - 1/2 = 3. Ground state nuclear spin anti-aligned with electron spin.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: FREQUENCY ANALYZER ================= -->
+        <section id="tab-freq-analyzer" class="tab-view-content">
+            <div class="analyzer-grid">
+                
+                <!-- Main Oscilloscope Display -->
+                <div class="hud-card oscilloscope-card">
+                    <div class="card-tag-row">
+                        <span class="card-tag-main"><i class="fa-solid fa-wave-square"></i> MICROWAVE SYNTHESIZER IF OSCILLOSCOPE</span>
+                        <div class="osc-toolbar">
+                            <span class="osc-stat">SWEEP: <strong>100 ns/div</strong></span>
+                            <span class="osc-stat">TRIG: <strong class="text-green">AUTO LOCK</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="canvas-viewport-wrap">
+                        <canvas id="oscilloscopeCanvas" width="860" height="320"></canvas>
+                        <div class="canvas-telemetry-overlay">
+                            <span>CARRIER: 9.192631770 GHz ↓ DOWNCONVERTED IF: 10.000 MHz</span>
+                            <span id="osc-vpp">V<sub>pp</sub>: 1.42 V</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frequency Deviation & Q-Factor Telemetry -->
+                <div class="hud-card freq-telemetry-card">
+                    <div class="card-tag-row">
+                        <span class="card-tag-main"><i class="fa-solid fa-chart-pie"></i> SYNTHESIZER HARMONICS & METROLOGY</span>
+                    </div>
+
+                    <div class="freq-gauges-cluster">
+                        <div class="gauge-box-scientific">
+                            <span class="g-title">QUALITY FACTOR (Q)</span>
+                            <span class="g-num text-cyan" id="txt-q-factor">2.1 × 10⁸</span>
+                            <span class="g-sub">Q = ν₀ / Δν (Ramsey Line Narrowing)</span>
+                        </div>
+
+                        <div class="gauge-box-scientific">
+                            <span class="g-title">SYNTHESIZER PHASE NOISE</span>
+                            <span class="g-num text-green" id="txt-phase-noise">-112 dBc/Hz</span>
+                            <span class="g-sub">At 1 Hz Carrier Offset</span>
+                        </div>
+
+                        <div class="gauge-box-scientific">
+                            <span class="g-title">SECOND-ORDER DOPPLER SHIFT</span>
+                            <span class="g-num text-amber" id="txt-doppler-shift">-1.8 × 10⁻¹⁴</span>
+                            <span class="g-sub">Thermal Atom Velocity Correction</span>
+                        </div>
+
+                        <div class="gauge-box-scientific">
+                            <span class="g-title">BLACKBODY RADIATION SHIFT</span>
+                            <span class="g-num text-cyan" id="txt-blackbody-shift">-1.68 × 10⁻¹⁴</span>
+                            <span class="g-sub">Ambient 300 K Cavity Stark Shift</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: TIME ANALYTICS ================= -->
+        <section id="tab-analytics" class="tab-view-content">
+            <div class="analytics-grid">
+                
+                <!-- Rolling Fractional Frequency Offset Strip Chart -->
+                <div class="hud-card chart-card">
+                    <div class="card-tag-row">
+                        <span class="card-tag-main"><i class="fa-solid fa-chart-area"></i> ROLLING FREQUENCY OFFSET (y = Δf / f₀)</span>
+                        <span class="card-status-badge">PARTS PER 10¹⁴ (60-SEC WINDOW)</span>
+                    </div>
+                    <div class="canvas-viewport-wrap">
+                        <canvas id="rollingOffsetCanvas" width="860" height="240"></canvas>
+                        <div class="canvas-telemetry-overlay">
+                            <span>BANDWIDTH: ±5.0 × 10⁻¹⁴</span>
+                            <span id="txt-offset-stats">MEAN: +0.02e-14 | σ: 1.15e-14</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Allan Deviation σ_y(τ) Graph -->
+                <div class="hud-card chart-card">
+                    <div class="card-tag-row">
+                        <span class="card-tag-main"><i class="fa-solid fa-chart-line"></i> ALLAN DEVIATION STABILITY PROFILE σ<sub>y</sub>(τ)</span>
+                        <span class="card-status-badge text-cyan">LOG-LOG STABILITY ENVELOPE</span>
+                    </div>
+                    <div class="canvas-viewport-wrap">
+                        <canvas id="allanDeviationCanvas" width="860" height="240"></canvas>
+                        <div class="canvas-telemetry-overlay">
+                            <span>SLOPE: τ⁻¹/² (WHITE FREQUENCY NOISE DOMINATED)</span>
+                            <span>MEASUREMENT HORIZON: 1s to 10⁴s</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Historical Measurement Telemetry Data Table -->
+            <div class="hud-card table-card" style="margin-top: 18px;">
+                <div class="card-tag-row">
+                    <span class="card-tag-main"><i class="fa-solid fa-table"></i> RECENT QUANTUM TELEMETRY BUFFER (LIVE LOG)</span>
+                    <button id="btn-export-table" class="hud-btn hud-btn-cyan">
+                        <i class="fa-solid fa-download"></i> <span>DOWNLOAD FULL LOG (CSV)</span>
+                    </button>
+                </div>
+                <div class="table-wrap-scientific">
+                    <table class="hud-data-table" id="telemetry-table">
+                        <thead>
+                            <tr>
+                                <th>TIMESTAMP (UTC)</th>
+                                <th>NTP OFFSET</th>
+                                <th>VCXO FREQUENCY</th>
+                                <th>DEVIATION (y)</th>
+                                <th>ALLAN DEV σ<sub>y</sub></th>
+                                <th>PHASE JITTER</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="telemetry-tbody">
+                            <!-- Dynamically populated rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 5: SYNCHRONIZATION (NTP & NETWORK) ================= -->
+        <section id="tab-sync" class="tab-view-content">
+            <div class="sync-grid">
+                
+                <!-- NTP Gauges -->
+                <div class="hud-card ntp-master-card">
+                    <div class="card-tag-row">
+                        <span class="card-tag-main"><i class="fa-solid fa-network-wired"></i> STRATUM 1 TIME SYNCHRONIZATION DASHBOARD</span>
+                        <div class="sync-actions-top">
+                            <button id="btn-manual-sync-now" class="hud-btn hud-btn-cyan">
+                                <i class="fa-solid fa-arrows-rotate"></i> <span>POLL NTP NOW</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="ntp-big-gauges-cluster">
+                        <div class="ntp-gauge-cell">
+                            <span class="ng-title">MEASURED CLOCK OFFSET</span>
+                            <span class="ng-val text-cyan" id="ntp-gauge-offset">+0.14 ms</span>
+                            <span class="ng-desc">Applied seamlessly via phase slew</span>
+                        </div>
+                        <div class="ntp-gauge-cell">
+                            <span class="ng-title">NETWORK ROUND-TRIP (RTT)</span>
+                            <span class="ng-val text-green" id="ntp-gauge-rtt">18.4 ms</span>
+                            <span class="ng-desc">Symmetric transit path delay</span>
+                        </div>
+                        <div class="ntp-gauge-cell">
+                            <span class="ng-title">TIMING UNCERTAINTY (±)</span>
+                            <span class="ng-val text-amber" id="ntp-gauge-uncertainty">± 0.09 ms</span>
+                            <span class="ng-desc">Estimated measurement margin</span>
+                        </div>
+                        <div class="ntp-gauge-cell">
+                            <span class="ng-title">ESTIMATED QUARTZ DRIFT</span>
+                            <span class="ng-val text-cyan" id="ntp-gauge-drift">0.038 μs/hr</span>
+                            <span class="ng-desc">Local RTC aging gradient</span>
+                        </div>
+                    </div>
+
+                    <!-- NTP Server Pool Inspector -->
+                    <div class="ntp-servers-pool">
+                        <h4 class="pool-title"><i class="fa-solid fa-server text-cyan"></i> Synchronized Time Authorities</h4>
+                        <div class="server-node-list">
+                            <div class="server-node-item active">
+                                <span class="server-dot led-green"></span>
+                                <div class="server-info">
+                                    <strong>worldtimeapi.org</strong>
+                                    <span>Stratum 1 (Primary Cesium Atomic Cluster) • Delay: 18ms</span>
+                                </div>
+                                <span class="server-status text-green">ACTIVE SYNC</span>
+                            </div>
+                            <div class="server-node-item">
+                                <span class="server-dot led-cyan"></span>
+                                <div class="server-info">
+                                    <strong>timeapi.io</strong>
+                                    <span>Stratum 2 (Backup Regional Geocast) • Delay: 24ms</span>
+                                </div>
+                                <span class="server-status text-cyan">STANDBY</span>
+                            </div>
+                            <div class="server-node-item">
+                                <span class="server-dot led-green"></span>
+                                <div class="server-info">
+                                    <strong>High-Precision Performance RTC</strong>
+                                    <span>Internal Stratum 0 Monotonic Clock • &lt; 5 μs Jitter</span>
+                                </div>
+                                <span class="server-status text-green">HARDWARE LOCKED</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sync Jitter Chart -->
+                <div class="hud-card ntp-jitter-card">
+                    <div class="card-tag-row">
+                        <span class="card-tag-main"><i class="fa-solid fa-chart-column"></i> NTP NETWORK JITTER DISTRIBUTION</span>
+                    </div>
+                    <div class="canvas-viewport-wrap">
+                        <canvas id="ntpJitterCanvas" width="460" height="260"></canvas>
+                        <div class="canvas-telemetry-overlay">
+                            <span>RTT ASYMMETRY ANALYSIS</span>
+                            <span id="txt-jitter-stat">JITTER: 1.2 ms</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= TAB 6: SYSTEM DIAGNOSTICS ================= -->
+        <section id="tab-diagnostics" class="tab-view-content">
+            <div class="diagnostics-grid">
+                
+                <!-- Physics Chamber Diagnostics -->
+                <div class="hud-card diag-sensors-card">
+                    <div class="card-tag-row">
+                        <span class="card-tag-main"><i class="fa-solid fa-shield-halved"></i> UHV ATOMIC CHAMBER SENSOR TELEMETRY</span>
+                        <span class="card-status-badge text-green">ALL SYSTEMS NOMINAL</span>
+                    </div>
+
+                    <div class="sensors-metric-grid">
+                        <div class="sensor-card">
+                            <span class="sc-label">VACUUM PRESSURE (ION PUMP)</span>
+                            <span class="sc-value text-green">1.2 × 10⁻⁸ Torr</span>
+                            <span class="sc-status">ULTRA-HIGH VACUUM</span>
+                        </div>
+                        <div class="sensor-card">
+                            <span class="sc-label">CESIUM OVEN TEMPERATURE</span>
+                            <span class="sc-value text-cyan">373.15 K (100.0°C)</span>
+                            <span class="sc-status">± 0.005 K PID REGULATED</span>
+                        </div>
+                        <div class="sensor-card">
+                            <span class="sc-label">OPTICAL MOLASSES PUMP LASER</span>
+                            <span class="sc-value text-green">852.3 nm (D2 LINE)</span>
+                            <span class="sc-status">SATURATION SPECTROSCOPY LOCKED</span>
+                        </div>
+                        <div class="sensor-card">
+                            <span class="sc-label">ZEEMAN MAGNETIC SHIELD ATTENUATION</span>
+                            <span class="sc-value text-cyan">-86 dB (4-LAYER)</span>
+                            <span class="sc-status">RESIDUAL B-FIELD &lt; 0.2 nT</span>
+                        </div>
+                        <div class="sensor-card">
+                            <span class="sc-label">MICROWAVE CAVITY Q (TE₀₁₁)</span>
+                            <span class="sc-value text-cyan">28,000 (UNLOADED)</span>
+                            <span class="sc-status">COPPER CAVITY CRYO-STABILIZED</span>
+                        </div>
+                        <div class="sensor-card">
+                            <span class="sc-label">SYSTEM UPTIME</span>
+                            <span class="sc-value text-white" id="diag-uptime">00d 00h 00m 00s</span>
+                            <span class="sc-status">CONTINUOUS METROLOGY</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Log & Diagnostic Terminal -->
+                <div class="hud-card diag-terminal-card">
+                    <div class="card-tag-row">
+                        <span class="card-tag-main"><i class="fa-solid fa-terminal"></i> REAL-TIME SYSTEM EVENT LOG</span>
+                        <button id="btn-clear-log" class="hud-btn hud-btn-ghost">
+                            <i class="fa-solid fa-trash-can"></i> <span>CLEAR</span>
+                        </button>
+                    </div>
+
+                    <div class="terminal-body" id="system-terminal-log">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= SYSTEM METROLOGY FOOTER ================= -->
+        <footer class="master-footer">
+            <div class="footer-segment">
+                <span class="f-lbl">INTERNATIONAL ATOMIC TIME (TAI):</span>
+                <span class="f-val text-cyan" id="footer-tai-time">--:--:--</span>
+            </div>
+            <div class="footer-segment">
+                <span class="f-lbl">GPS TIME:</span>
+                <span class="f-val text-green" id="footer-gps-time">--:--:--</span>
+            </div>
+            <div class="footer-segment">
+                <span class="f-lbl">UTC LEAP SECONDS:</span>
+                <span class="f-val text-white">+37s accumulated</span>
+            </div>
+            <div class="footer-segment">
+                <span class="f-lbl">METROLOGICAL UNCERTAINTY:</span>
+                <span class="f-val text-cyan">1.8 × 10⁻¹⁴ (BIPM Class)</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Notification Toast Host -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Master Scientific Engine Script -->
+    <script src="script.js"></script>
+</body>
+</html>
